@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
+import json
 
 # ==========================================
 # BANCO DE DADOS
@@ -29,6 +30,54 @@ CREATE TABLE IF NOT EXISTS pedidos (
 """)
 
 conexao.commit()
+
+# ==========================================
+# EXPORTAR JSON
+# ==========================================
+
+def exportar_json():
+
+    dados = {}
+
+    # Usuarios
+    cursor.execute("SELECT * FROM usuarios")
+    usuarios = cursor.fetchall()
+
+    lista_usuarios = []
+
+    for u in usuarios:
+        lista_usuarios.append({
+            "id": u[0],
+            "nome": u[1],
+            "email": u[2],
+            "usuario": u[3],
+            "senha": u[4]
+        })
+
+    # Pedidos
+    cursor.execute("SELECT * FROM pedidos")
+    pedidos = cursor.fetchall()
+
+    lista_pedidos = []
+
+    for p in pedidos:
+        lista_pedidos.append({
+            "id": p[0],
+            "usuario": p[1],
+            "produto": p[2],
+            "preco": p[3]
+        })
+
+    dados["usuarios"] = lista_usuarios
+    dados["pedidos"] = lista_pedidos
+
+    with open("backup_loja.json", "w", encoding="utf-8") as arquivo:
+        json.dump(dados, arquivo, indent=4, ensure_ascii=False)
+
+    messagebox.showinfo(
+        "Exportação",
+        "Banco de dados exportado para backup_loja.json"
+    )
 
 # ==========================================
 # ESTOQUE
@@ -61,16 +110,8 @@ janela.title("CENTRAL DOS TÊNIS")
 janela.geometry("1200x700")
 janela.configure(bg="#111827")
 
-# ==========================================
-# MENU
-# ==========================================
-
 menu = tk.Frame(janela, bg="#7c3aed", width=250)
 menu.pack(side="left", fill="y")
-
-# ==========================================
-# CONTAINER COM SCROLL
-# ==========================================
 
 container = tk.Frame(janela, bg="#111827")
 container.pack(side="right", expand=True, fill="both")
@@ -104,19 +145,11 @@ canvas_window = canvas.create_window(
     anchor="n"
 )
 
-# ==========================================
-# CENTRALIZAR
-# ==========================================
-
 def centralizar_frame(event):
     largura_canvas = event.width
     canvas.itemconfig(canvas_window, width=largura_canvas)
 
 canvas.bind("<Configure>", centralizar_frame)
-
-# ==========================================
-# SCROLL
-# ==========================================
 
 def atualizar_scroll(event):
     canvas.configure(scrollregion=canvas.bbox("all"))
@@ -173,7 +206,7 @@ def cadastrar_usuario():
         entrada_usuario.delete(0, tk.END)
         entrada_senha.delete(0, tk.END)
 
-    except:
+    except sqlite3.IntegrityError:
         messagebox.showerror(
             "Erro",
             "Usuário já existe!"
@@ -394,74 +427,6 @@ def tela_estoque():
         botao.pack(pady=15)
 
 # ==========================================
-# BUSCAR
-# ==========================================
-
-def tela_busca():
-
-    limpar_tela()
-
-    titulo = tk.Label(
-        frame_conteudo,
-        text="BUSCAR TÊNIS",
-        bg="#111827",
-        fg="#22d3ee",
-        font=("Arial Black", 24)
-    )
-
-    titulo.pack(pady=20)
-
-    entrada_busca = tk.Entry(
-        frame_conteudo,
-        font=("Arial", 14),
-        width=35
-    )
-
-    entrada_busca.pack(pady=10)
-
-    resultado = tk.Label(
-        frame_conteudo,
-        text="",
-        bg="#111827",
-        fg="white",
-        font=("Arial", 13),
-        justify="center"
-    )
-
-    resultado.pack(pady=20)
-
-    def pesquisar():
-
-        pesquisa = entrada_busca.get().lower()
-
-        encontrados = []
-
-        for tenis in estoque:
-
-            if pesquisa in tenis['marca'].lower() or pesquisa in tenis['modelo'].lower():
-
-                encontrados.append(
-                    f"{tenis['marca']} - {tenis['modelo']} | R$ {tenis['preco']:.2f}"
-                )
-
-        if encontrados:
-            resultado.config(text="\n".join(encontrados))
-        else:
-            resultado.config(text="Tênis não encontrado!")
-
-    botao = tk.Button(
-        frame_conteudo,
-        text="Pesquisar",
-        command=pesquisar,
-        bg="#22d3ee",
-        fg="#111827",
-        font=("Arial", 12, "bold"),
-        width=20
-    )
-
-    botao.pack(pady=10)
-
-# ==========================================
 # CARRINHO
 # ==========================================
 
@@ -647,13 +612,12 @@ status_login = tk.Label(
 status_login.pack(pady=15)
 
 # ==========================================
-# BOTÕES MENU
+# MENU
 # ==========================================
 
 botoes = [
     ("🏠 Início", tela_inicio),
     ("👟 Estoque", tela_estoque),
-    ("🔎 Buscar", tela_busca),
     ("🛒 Carrinho", tela_carrinho),
 ]
 
@@ -671,6 +635,23 @@ for texto, comando in botoes:
     )
 
     botao.pack(pady=8)
+
+# ==========================================
+# BOTÃO EXPORTAR JSON
+# ==========================================
+
+botao_exportar = tk.Button(
+    menu,
+    text="📁 Exportar JSON",
+    command=exportar_json,
+    bg="#10b981",
+    fg="white",
+    font=("Arial", 11, "bold"),
+    width=22,
+    height=2
+)
+
+botao_exportar.pack(pady=20)
 
 # ==========================================
 # INICIAR

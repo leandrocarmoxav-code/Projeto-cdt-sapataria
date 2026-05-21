@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Central dos Tênis</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            background:#0f172a;
+            color:white;
+        }
+
+        header{
+            background:#7c3aed;
+            padding:20px;
+            text-align:center;
+            font-size:40px;
+            font-weight:bold;
+        }
+
+        .container{
+            display:flex;
+            min-height:100vh;
+        }
+
+        .menu{
+            width:320px;
+            background:#111827;
+            padding:20px;
+        }
+
+        .menu h2{
+            margin-bottom:15px;
+            color:#22d3ee;
+        }
+
+        .menu input{
+            width:100%;
+            padding:12px;
+            margin-bottom:10px;
+            border:none;
+            border-radius:10px;
+        }
+
+        .menu button{
+            width:100%;
+            padding:12px;
+            margin-bottom:10px;
+            border:none;
+            border-radius:10px;
+            background:#22d3ee;
+            color:#111827;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .conteudo{
+            flex:1;
+            padding:30px;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:#1e293b;
+            padding:20px;
+            border-radius:15px;
+        }
+
+        .card h3{
+            margin-bottom:10px;
+            color:#22d3ee;
+        }
+
+        .card p{
+            margin-bottom:10px;
+        }
+
+        .card button{
+            width:100%;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#10b981;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .carrinho{
+            margin-top:40px;
+            background:#111827;
+            padding:20px;
+            border-radius:15px;
+        }
+
+        .item{
+            margin-bottom:10px;
+        }
+
+        .total{
+            margin-top:20px;
+            color:#22d3ee;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .status{
+            margin-top:15px;
+            color:#22d3ee;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    🔥 CENTRAL DOS TÊNIS 🔥
+</header>
+
+<div class="container">
+
+    <div class="menu">
+
+        <h2>Criar Conta</h2>
+
+        <input type="text" id="nome" placeholder="Nome Completo">
+
+        <input type="email" id="email" placeholder="E-mail">
+
+        <input type="text" id="telefone" placeholder="Telefone">
+
+        <input type="text" id="cidade" placeholder="Cidade">
+
+        <input type="text" id="usuario" placeholder="Usuário">
+
+        <input type="password" id="senha" placeholder="Senha">
+
+        <button onclick="criarConta()">
+            Criar Conta
+        </button>
+
+        <hr style="margin:20px 0; border:1px solid #374151;">
+
+        <h2>Login</h2>
+
+        <input type="text" id="loginUsuario" placeholder="Usuário">
+
+        <input type="password" id="loginSenha" placeholder="Senha">
+
+        <button onclick="fazerLogin()">
+            Entrar
+        </button>
+
+        <div class="status" id="status">
+            Nenhum usuário logado
+        </div>
+
+        <hr style="margin:20px 0; border:1px solid #374151;">
+
+        <button onclick="exportarJSON()">
+            📁 Exportar JSON
+        </button>
+
+    </div>
+
+    <div class="conteudo">
+
+        <h1 style="margin-bottom:30px; color:#22d3ee;">
+            Estoque de Tênis
+        </h1>
+
+        <div class="cards" id="cards"></div>
+
+        <div class="carrinho">
+
+            <h2>
+                🛒 Carrinho
+            </h2>
+
+            <div id="listaCarrinho"></div>
+
+            <div class="total" id="total">
+                Total: R$ 0.00
+            </div>
+
+            <br>
+
+            <button onclick="finalizarCompra()"
+            style="
+                padding:15px;
+                border:none;
+                border-radius:10px;
+                background:#10b981;
+                color:white;
+                font-size:16px;
+                font-weight:bold;
+                cursor:pointer;
+            ">
+                💳 Finalizar Compra
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const estoque = [
+
+    {
+        marca:"Nike",
+        modelo:"Air Max 90",
+        preco:799.90
+    },
+
+    {
+        marca:"Nike",
+        modelo:"Jordan 1",
+        preco:999.90
+    },
+
+    {
+        marca:"Adidas",
+        modelo:"Ultraboost",
+        preco:699.90
+    },
+
+    {
+        marca:"Puma",
+        modelo:"RS-X",
+        preco:450.00
+    },
+
+    {
+        marca:"Vans",
+        modelo:"Old Skool",
+        preco:399.90
+    },
+
+    {
+        marca:"Jordan",
+        modelo:"Jordan 4 Retro",
+        preco:1799.90
+    }
+
+];
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+let carrinho = [];
+
+let usuarioLogado = null;
+
+function mostrarProdutos(){
+
+    const cards = document.getElementById("cards");
+
+    cards.innerHTML = "";
+
+    estoque.forEach((tenis,index)=>{
+
+        cards.innerHTML += `
+
+        <div class="card">
+
+            <h3>${tenis.marca}</h3>
+
+            <p>${tenis.modelo}</p>
+
+            <p>R$ ${tenis.preco.toFixed(2)}</p>
+
+            <button onclick="adicionarCarrinho(${index})">
+
+                Adicionar ao Carrinho
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function criarConta(){
+
+    const nome = document.getElementById("nome").value;
+
+    const email = document.getElementById("email").value;
+
+    const telefone = document.getElementById("telefone").value;
+
+    const cidade = document.getElementById("cidade").value;
+
+    const usuario = document.getElementById("usuario").value;
+
+    const senha = document.getElementById("senha").value;
+
+    if(
+        nome == "" ||
+        email == "" ||
+        telefone == "" ||
+        cidade == "" ||
+        usuario == "" ||
+        senha == ""
+    ){
+
+        alert("Preencha todos os campos!");
+
+        return;
+
+    }
+
+    usuarios.push({
+
+        nome,
+        email,
+        telefone,
+        cidade,
+        usuario,
+        senha
+
+    });
+
+    localStorage.setItem(
+        "usuarios",
+        JSON.stringify(usuarios)
+    );
+
+    alert("Conta criada com sucesso!");
+
+}
+
+function fazerLogin(){
+
+    const usuario = document.getElementById("loginUsuario").value;
+
+    const senha = document.getElementById("loginSenha").value;
+
+    const encontrado = usuarios.find(u =>
+
+        u.usuario == usuario &&
+        u.senha == senha
+
+    );
+
+    if(encontrado){
+
+        usuarioLogado = encontrado;
+
+        document.getElementById("status").innerHTML =
+
+            `Logado: ${encontrado.nome}`;
+
+        alert("Login realizado!");
+
+    }
+
+    else{
+
+        alert("Usuário ou senha incorretos!");
+
+    }
+
+}
+
+function adicionarCarrinho(index){
+
+    if(usuarioLogado == null){
+
+        alert("Faça login primeiro!");
+
+        return;
+
+    }
+
+    carrinho.push(estoque[index]);
+
+    atualizarCarrinho();
+
+}
+
+function atualizarCarrinho(){
+
+    const lista = document.getElementById("listaCarrinho");
+
+    lista.innerHTML = "";
+
+    let total = 0;
+
+    carrinho.forEach((item)=>{
+
+        total += item.preco;
+
+        lista.innerHTML += `
+
+        <div class="item">
+
+            ${item.marca} - ${item.modelo}
+            | R$ ${item.preco.toFixed(2)}
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("total").innerHTML =
+
+        `Total: R$ ${total.toFixed(2)}`;
+
+}
+
+function finalizarCompra(){
+
+    if(carrinho.length == 0){
+
+        alert("Carrinho vazio!");
+
+        return;
+
+    }
+
+    alert("Compra finalizada com sucesso!");
+
+    carrinho = [];
+
+    atualizarCarrinho();
+
+}
+
+function exportarJSON(){
+
+    const dados = {
+
+        usuarios: usuarios,
+        carrinho: carrinho
+
+    };
+
+    const texto = JSON.stringify(
+        dados,
+        null,
+        4
+    );
+
+    const blob = new Blob([texto], {
+
+        type:"application/json"
+
+    });
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "backup_loja.json";
+
+    link.click();
+
+}
+
+mostrarProdutos();
+
+</script>
+
+</body>
+</html>
+</html>
