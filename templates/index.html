@@ -2,141 +2,363 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Central dos Tênis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
+<title>Central dos Tênis</title>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        body{
-            background:#0f172a;
-            color:white;
-        }
+<style>
 
-        header{
-            background:#7c3aed;
-            padding:20px;
-            text-align:center;
-            font-size:40px;
-            font-weight:bold;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
 
-        .container{
-            display:flex;
-            min-height:100vh;
-        }
+body{
+    background:#0b1120;
+    color:white;
+}
 
-        .menu{
-            width:320px;
-            background:#111827;
-            padding:20px;
-        }
+/* HEADER */
 
-        .menu h2{
-            margin-bottom:15px;
-            color:#22d3ee;
-        }
+header{
+    width:100%;
+    background:linear-gradient(90deg,#7c3aed,#2563eb);
+    padding:20px 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
 
-        .menu input{
-            width:100%;
-            padding:12px;
-            margin-bottom:10px;
-            border:none;
-            border-radius:10px;
-        }
+.logo{
+    font-size:32px;
+    font-weight:700;
+}
 
-        .menu button{
-            width:100%;
-            padding:12px;
-            margin-bottom:10px;
-            border:none;
-            border-radius:10px;
-            background:#22d3ee;
-            color:#111827;
-            font-weight:bold;
-            cursor:pointer;
-        }
+.logo span{
+    color:#22d3ee;
+}
 
-        .conteudo{
-            flex:1;
-            padding:30px;
-        }
+nav{
+    display:flex;
+    gap:25px;
+}
 
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:20px;
-        }
+nav a{
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+    transition:0.3s;
+}
 
-        .card{
-            background:#1e293b;
-            padding:20px;
-            border-radius:15px;
-        }
+nav a:hover{
+    color:#22d3ee;
+}
 
-        .card h3{
-            margin-bottom:10px;
-            color:#22d3ee;
-        }
+/* HERO */
 
-        .card p{
-            margin-bottom:10px;
-        }
+.hero{
+    height:500px;
+    background:
+    linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.7)),
+    url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1470&auto=format&fit=crop');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
 
-        .card button{
-            width:100%;
-            padding:10px;
-            border:none;
-            border-radius:10px;
-            background:#10b981;
-            color:white;
-            font-weight:bold;
-            cursor:pointer;
-        }
+.hero-content h1{
+    font-size:65px;
+    margin-bottom:20px;
+}
 
-        .carrinho{
-            margin-top:40px;
-            background:#111827;
-            padding:20px;
-            border-radius:15px;
-        }
+.hero-content p{
+    font-size:22px;
+    margin-bottom:30px;
+    color:#d1d5db;
+}
 
-        .item{
-            margin-bottom:10px;
-        }
+.hero-content button{
+    padding:16px 35px;
+    border:none;
+    border-radius:50px;
+    background:#22d3ee;
+    color:#0f172a;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
 
-        .total{
-            margin-top:20px;
-            color:#22d3ee;
-            font-size:22px;
-            font-weight:bold;
-        }
+.hero-content button:hover{
+    transform:scale(1.05);
+}
 
-        .status{
-            margin-top:15px;
-            color:#22d3ee;
-            font-weight:bold;
-        }
+/* MENU */
 
-    </style>
+.container{
+    display:flex;
+    padding:30px;
+    gap:30px;
+}
 
+.sidebar{
+    width:320px;
+    background:#111827;
+    border-radius:20px;
+    padding:25px;
+    height:fit-content;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.sidebar h2{
+    margin-bottom:15px;
+    color:#22d3ee;
+}
+
+.sidebar input{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:12px;
+    background:#1f2937;
+    color:white;
+}
+
+.sidebar button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg,#22d3ee,#2563eb);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.sidebar button:hover{
+    transform:translateY(-2px);
+}
+
+.status{
+    margin-top:15px;
+    background:#1f2937;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    color:#22d3ee;
+    font-weight:bold;
+}
+
+/* PRODUTOS */
+
+.content{
+    flex:1;
+}
+
+.topo-produtos{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.topo-produtos h1{
+    font-size:40px;
+}
+
+.search{
+    width:300px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#1e293b;
+    color:white;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:#111827;
+    border-radius:20px;
+    overflow:hidden;
+    transition:0.3s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-info{
+    padding:20px;
+}
+
+.card-info h3{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.card-info p{
+    color:#9ca3af;
+    margin-bottom:12px;
+}
+
+.preco{
+    color:#22d3ee;
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.card-info button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#10b981;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card-info button:hover{
+    background:#059669;
+}
+
+/* CARRINHO */
+
+.carrinho{
+    margin-top:40px;
+    background:#111827;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.carrinho h2{
+    margin-bottom:20px;
+}
+
+.item{
+    background:#1f2937;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.total{
+    margin-top:20px;
+    font-size:28px;
+    color:#22d3ee;
+    font-weight:bold;
+}
+
+.finalizar{
+    width:100%;
+    margin-top:20px;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    background:linear-gradient(90deg,#10b981,#059669);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+footer{
+    margin-top:50px;
+    padding:30px;
+    text-align:center;
+    background:#111827;
+    color:#9ca3af;
+}
+
+@media(max-width:950px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .hero-content h1{
+        font-size:45px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-    🔥 CENTRAL DOS TÊNIS 🔥
+
+    <div class="logo">
+        CENTRAL <span>DOS TÊNIS</span>
+    </div>
+
+    <nav>
+        <a href="#">Início</a>
+        <a href="#">Masculino</a>
+        <a href="#">Feminino</a>
+        <a href="#">Lançamentos</a>
+        <a href="#">Promoções</a>
+    </nav>
+
 </header>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>OS MELHORES TÊNIS ESTÃO AQUI</h1>
+
+        <p>
+            Nike, Adidas, Jordan, Puma e muito mais
+        </p>
+
+        <button>
+            Comprar Agora
+        </button>
+
+    </div>
+
+</section>
 
 <div class="container">
 
-    <div class="menu">
+    <div class="sidebar">
 
         <h2>Criar Conta</h2>
 
@@ -156,7 +378,7 @@
             Criar Conta
         </button>
 
-        <hr style="margin:20px 0; border:1px solid #374151;">
+        <br><br>
 
         <h2>Login</h2>
 
@@ -172,7 +394,7 @@
             Nenhum usuário logado
         </div>
 
-        <hr style="margin:20px 0; border:1px solid #374151;">
+        <br>
 
         <button onclick="exportarJSON()">
             📁 Exportar JSON
@@ -180,19 +402,26 @@
 
     </div>
 
-    <div class="conteudo">
+    <div class="content">
 
-        <h1 style="margin-bottom:30px; color:#22d3ee;">
-            Estoque de Tênis
-        </h1>
+        <div class="topo-produtos">
+
+            <h1>Lançamentos</h1>
+
+            <input
+            type="text"
+            class="search"
+            placeholder="Pesquisar tênis..."
+            onkeyup="pesquisar(this.value)"
+            >
+
+        </div>
 
         <div class="cards" id="cards"></div>
 
         <div class="carrinho">
 
-            <h2>
-                🛒 Carrinho
-            </h2>
+            <h2>🛒 Carrinho</h2>
 
             <div id="listaCarrinho"></div>
 
@@ -200,19 +429,7 @@
                 Total: R$ 0.00
             </div>
 
-            <br>
-
-            <button onclick="finalizarCompra()"
-            style="
-                padding:15px;
-                border:none;
-                border-radius:10px;
-                background:#10b981;
-                color:white;
-                font-size:16px;
-                font-weight:bold;
-                cursor:pointer;
-            ">
+            <button class="finalizar" onclick="finalizarCompra()">
                 💳 Finalizar Compra
             </button>
 
@@ -222,45 +439,55 @@
 
 </div>
 
+<footer>
+    © 2026 Central dos Tênis - Todos os direitos reservados
+</footer>
+
 <script>
 
 const estoque = [
 
-    {
-        marca:"Nike",
-        modelo:"Air Max 90",
-        preco:799.90
-    },
+{
+    marca:"Nike",
+    modelo:"Air Max 90",
+    preco:799.90,
+    imagem:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000"
+},
 
-    {
-        marca:"Nike",
-        modelo:"Jordan 1",
-        preco:999.90
-    },
+{
+    marca:"Nike",
+    modelo:"Jordan 1",
+    preco:999.90,
+    imagem:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1000"
+},
 
-    {
-        marca:"Adidas",
-        modelo:"Ultraboost",
-        preco:699.90
-    },
+{
+    marca:"Adidas",
+    modelo:"Ultraboost",
+    preco:699.90,
+    imagem:"https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=1000"
+},
 
-    {
-        marca:"Puma",
-        modelo:"RS-X",
-        preco:450.00
-    },
+{
+    marca:"Puma",
+    modelo:"RS-X",
+    preco:450.00,
+    imagem:"https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1000"
+},
 
-    {
-        marca:"Vans",
-        modelo:"Old Skool",
-        preco:399.90
-    },
+{
+    marca:"Vans",
+    modelo:"Old Skool",
+    preco:399.90,
+    imagem:"https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1000"
+},
 
-    {
-        marca:"Jordan",
-        modelo:"Jordan 4 Retro",
-        preco:1799.90
-    }
+{
+    marca:"Jordan",
+    modelo:"Jordan 4 Retro",
+    preco:1799.90,
+    imagem:"https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=1000"
+}
 
 ];
 
@@ -270,29 +497,35 @@ let carrinho = [];
 
 let usuarioLogado = null;
 
-function mostrarProdutos(){
+function mostrarProdutos(lista = estoque){
 
     const cards = document.getElementById("cards");
 
     cards.innerHTML = "";
 
-    estoque.forEach((tenis,index)=>{
+    lista.forEach((tenis,index)=>{
 
         cards.innerHTML += `
 
         <div class="card">
 
-            <h3>${tenis.marca}</h3>
+            <img src="${tenis.imagem}">
 
-            <p>${tenis.modelo}</p>
+            <div class="card-info">
 
-            <p>R$ ${tenis.preco.toFixed(2)}</p>
+                <h3>${tenis.marca}</h3>
 
-            <button onclick="adicionarCarrinho(${index})">
+                <p>${tenis.modelo}</p>
 
-                Adicionar ao Carrinho
+                <div class="preco">
+                    R$ ${tenis.preco.toFixed(2)}
+                </div>
 
-            </button>
+                <button onclick="adicionarCarrinho(${index})">
+                    Adicionar ao Carrinho
+                </button>
+
+            </div>
 
         </div>
 
@@ -302,18 +535,27 @@ function mostrarProdutos(){
 
 }
 
+function pesquisar(valor){
+
+    const filtrado = estoque.filter(tenis =>
+
+        tenis.marca.toLowerCase().includes(valor.toLowerCase()) ||
+
+        tenis.modelo.toLowerCase().includes(valor.toLowerCase())
+
+    );
+
+    mostrarProdutos(filtrado);
+
+}
+
 function criarConta(){
 
     const nome = document.getElementById("nome").value;
-
     const email = document.getElementById("email").value;
-
     const telefone = document.getElementById("telefone").value;
-
     const cidade = document.getElementById("cidade").value;
-
     const usuario = document.getElementById("usuario").value;
-
     const senha = document.getElementById("senha").value;
 
     if(
@@ -326,20 +568,17 @@ function criarConta(){
     ){
 
         alert("Preencha todos os campos!");
-
         return;
 
     }
 
     usuarios.push({
-
         nome,
         email,
         telefone,
         cidade,
         usuario,
         senha
-
     });
 
     localStorage.setItem(
@@ -353,9 +592,11 @@ function criarConta(){
 
 function fazerLogin(){
 
-    const usuario = document.getElementById("loginUsuario").value;
+    const usuario =
+    document.getElementById("loginUsuario").value;
 
-    const senha = document.getElementById("loginSenha").value;
+    const senha =
+    document.getElementById("loginSenha").value;
 
     const encontrado = usuarios.find(u =>
 
@@ -369,8 +610,7 @@ function fazerLogin(){
         usuarioLogado = encontrado;
 
         document.getElementById("status").innerHTML =
-
-            `Logado: ${encontrado.nome}`;
+        `👤 ${encontrado.nome}`;
 
         alert("Login realizado!");
 
@@ -389,7 +629,6 @@ function adicionarCarrinho(index){
     if(usuarioLogado == null){
 
         alert("Faça login primeiro!");
-
         return;
 
     }
@@ -402,7 +641,8 @@ function adicionarCarrinho(index){
 
 function atualizarCarrinho(){
 
-    const lista = document.getElementById("listaCarrinho");
+    const lista =
+    document.getElementById("listaCarrinho");
 
     lista.innerHTML = "";
 
@@ -417,6 +657,7 @@ function atualizarCarrinho(){
         <div class="item">
 
             ${item.marca} - ${item.modelo}
+
             | R$ ${item.preco.toFixed(2)}
 
         </div>
@@ -427,7 +668,7 @@ function atualizarCarrinho(){
 
     document.getElementById("total").innerHTML =
 
-        `Total: R$ ${total.toFixed(2)}`;
+    `Total: R$ ${total.toFixed(2)}`;
 
 }
 
@@ -436,7 +677,6 @@ function finalizarCompra(){
     if(carrinho.length == 0){
 
         alert("Carrinho vazio!");
-
         return;
 
     }
@@ -453,28 +693,28 @@ function exportarJSON(){
 
     const dados = {
 
-        usuarios: usuarios,
-        carrinho: carrinho
+        usuarios:usuarios,
+        carrinho:carrinho
 
     };
 
-    const texto = JSON.stringify(
-        dados,
-        null,
-        4
-    );
+    const texto =
+    JSON.stringify(dados,null,4);
 
-    const blob = new Blob([texto], {
+    const blob = new Blob([texto],{
 
         type:"application/json"
 
     });
 
-    const link = document.createElement("a");
+    const link =
+    document.createElement("a");
 
-    link.href = URL.createObjectURL(blob);
+    link.href =
+    URL.createObjectURL(blob);
 
-    link.download = "backup_loja.json";
+    link.download =
+    "backup_loja.json";
 
     link.click();
 
@@ -485,5 +725,4 @@ mostrarProdutos();
 </script>
 
 </body>
-</html>
 </html>

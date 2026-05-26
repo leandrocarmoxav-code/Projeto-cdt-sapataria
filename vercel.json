@@ -1,9 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/portfolio", "destination": "/projects" },
-    { "source": "/api/:path*", "destination": "https://api.meuservidor.com/:path*" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
   ],
-  "redirects": [
-    { "source": "/antiga-pagina", "destination": "/nova-pagina", "permanent": true }
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
   ]
 }

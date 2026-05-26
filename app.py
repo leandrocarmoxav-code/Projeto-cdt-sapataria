@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import json
-import webbrowser
+import os
 
 app = Flask(__name__)
 
@@ -9,48 +9,122 @@ app = Flask(__name__)
 # BANCO DE DADOS
 # ==========================================
 
+DATABASE = "central_tenis.db"
+
 def conectar():
-    return sqlite3.connect("central_tenis.db")
 
-conexao = conectar()
-cursor = conexao.cursor()
+    conexao = sqlite3.connect(DATABASE)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT,
-    email TEXT,
-    usuario TEXT UNIQUE,
-    senha TEXT
-)
-""")
+    conexao.row_factory = sqlite3.Row
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS pedidos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    usuario TEXT,
-    produto TEXT,
-    preco REAL
-)
-""")
+    return conexao
 
-conexao.commit()
-conexao.close()
+def criar_tabelas():
+
+    conexao = conectar()
+
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+
+    CREATE TABLE IF NOT EXISTS usuarios (
+
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        nome TEXT NOT NULL,
+
+        email TEXT NOT NULL,
+
+        usuario TEXT UNIQUE NOT NULL,
+
+        senha TEXT NOT NULL
+
+    )
+
+    """)
+
+    cursor.execute("""
+
+    CREATE TABLE IF NOT EXISTS pedidos (
+
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        usuario TEXT,
+
+        produto TEXT,
+
+        preco REAL
+
+    )
+
+    """)
+
+    conexao.commit()
+
+    conexao.close()
+
+criar_tabelas()
 
 # ==========================================
 # ESTOQUE
 # ==========================================
 
 estoque = [
-    {"marca": "Nike", "modelo": "Air Max 90", "preco": 799.90},
-    {"marca": "Nike", "modelo": "Jordan 1", "preco": 999.90},
-    {"marca": "Adidas", "modelo": "Ultraboost", "preco": 699.90},
-    {"marca": "Puma", "modelo": "RS-X", "preco": 450.00},
-    {"marca": "Vans", "modelo": "Old Skool", "preco": 399.90},
-    {"marca": "New Balance", "modelo": "9060", "preco": 950.00},
-    {"marca": "Asics", "modelo": "Gel Kayano", "preco": 850.00},
-    {"marca": "Converse", "modelo": "Chuck Taylor", "preco": 320.00},
-    {"marca": "Jordan", "modelo": "Jordan 4 Retro", "preco": 1799.90},
+
+    {
+        "marca": "Nike",
+        "modelo": "Air Max 90",
+        "preco": 799.90
+    },
+
+    {
+        "marca": "Nike",
+        "modelo": "Jordan 1",
+        "preco": 999.90
+    },
+
+    {
+        "marca": "Adidas",
+        "modelo": "Ultraboost",
+        "preco": 699.90
+    },
+
+    {
+        "marca": "Puma",
+        "modelo": "RS-X",
+        "preco": 450.00
+    },
+
+    {
+        "marca": "Vans",
+        "modelo": "Old Skool",
+        "preco": 399.90
+    },
+
+    {
+        "marca": "New Balance",
+        "modelo": "9060",
+        "preco": 950.00
+    },
+
+    {
+        "marca": "Asics",
+        "modelo": "Gel Kayano",
+        "preco": 850.00
+    },
+
+    {
+        "marca": "Converse",
+        "modelo": "Chuck Taylor",
+        "preco": 320.00
+    },
+
+    {
+        "marca": "Jordan",
+        "modelo": "Jordan 4 Retro",
+        "preco": 1799.90
+    }
+
 ]
 
 # ==========================================
@@ -59,7 +133,14 @@ estoque = [
 
 @app.route("/")
 def inicio():
-    return render_template("index.html", estoque=estoque)
+
+    return render_template(
+
+        "index.html",
+
+        estoque=estoque
+
+    )
 
 # ==========================================
 # CADASTRAR USUÁRIO
@@ -68,28 +149,37 @@ def inicio():
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
 
-    nome = request.form["nome"]
-    email = request.form["email"]
-    usuario = request.form["usuario"]
-    senha = request.form["senha"]
+    nome = request.form.get("nome")
+    email = request.form.get("email")
+    usuario = request.form.get("usuario")
+    senha = request.form.get("senha")
 
-    if nome == "" or email == "" or usuario == "" or senha == "":
+    if not nome or not email or not usuario or not senha:
+
         return "Preencha todos os campos!"
 
     conexao = conectar()
+
     cursor = conexao.cursor()
 
     try:
 
         cursor.execute("""
-        INSERT INTO usuarios (nome, email, usuario, senha)
+
+        INSERT INTO usuarios
+
+        (nome, email, usuario, senha)
+
         VALUES (?, ?, ?, ?)
+
         """, (nome, email, usuario, senha))
 
         conexao.commit()
 
-    except:
+    except sqlite3.IntegrityError:
+
         conexao.close()
+
         return "Usuário já existe!"
 
     conexao.close()
@@ -103,15 +193,19 @@ def cadastrar():
 @app.route("/login", methods=["POST"])
 def login():
 
-    usuario = request.form["usuario"]
-    senha = request.form["senha"]
+    usuario = request.form.get("usuario")
+    senha = request.form.get("senha")
 
     conexao = conectar()
+
     cursor = conexao.cursor()
 
     cursor.execute("""
+
     SELECT * FROM usuarios
+
     WHERE usuario = ? AND senha = ?
+
     """, (usuario, senha))
 
     resultado = cursor.fetchone()
@@ -119,9 +213,16 @@ def login():
     conexao.close()
 
     if resultado:
-        return f"Login realizado! Bem-vindo {resultado[1]}"
-    else:
-        return "Usuário ou senha incorretos!"
+
+        return f"""
+
+        Login realizado!
+
+        Bem-vindo {resultado['nome']}
+
+        """
+
+    return "Usuário ou senha incorretos!"
 
 # ==========================================
 # EXPORTAR JSON
@@ -131,55 +232,117 @@ def login():
 def exportar():
 
     conexao = conectar()
+
     cursor = conexao.cursor()
 
     cursor.execute("SELECT * FROM usuarios")
+
     usuarios = cursor.fetchall()
 
     cursor.execute("SELECT * FROM pedidos")
+
     pedidos = cursor.fetchall()
 
     lista_usuarios = []
 
     for u in usuarios:
+
         lista_usuarios.append({
-            "id": u[0],
-            "nome": u[1],
-            "email": u[2],
-            "usuario": u[3],
-            "senha": u[4]
+
+            "id": u["id"],
+            "nome": u["nome"],
+            "email": u["email"],
+            "usuario": u["usuario"],
+            "senha": u["senha"]
+
         })
 
     lista_pedidos = []
 
     for p in pedidos:
+
         lista_pedidos.append({
-            "id": p[0],
-            "usuario": p[1],
-            "produto": p[2],
-            "preco": p[3]
+
+            "id": p["id"],
+            "usuario": p["usuario"],
+            "produto": p["produto"],
+            "preco": p["preco"]
+
         })
 
     dados = {
+
         "usuarios": lista_usuarios,
+
         "pedidos": lista_pedidos
+
     }
 
-    with open("backup_loja.json", "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=4, ensure_ascii=False)
+    with open(
+
+        "backup_loja.json",
+
+        "w",
+
+        encoding="utf-8"
+
+    ) as arquivo:
+
+        json.dump(
+
+            dados,
+
+            arquivo,
+
+            indent=4,
+
+            ensure_ascii=False
+
+        )
 
     conexao.close()
 
     return jsonify({
-        "mensagem": "JSON exportado com sucesso!"
+
+        "mensagem":
+
+        "JSON exportado com sucesso!"
+
     })
 
 # ==========================================
-# INICIAR SITE
+# TESTE VERCEL
+# ==========================================
+
+@app.route("/teste")
+def teste():
+
+    return "Servidor Flask funcionando!"
+
+# ==========================================
+# INICIAR SERVIDOR
 # ==========================================
 
 if __name__ == "__main__":
 
-    webbrowser.open("http://127.0.0.1:5000")
+    porta = int(
 
-    app.run(debug=True)
+        os.environ.get(
+
+            "PORT",
+
+            5000
+
+        )
+
+    )
+
+    app.run(
+
+        host="0.0.0.0",
+
+        port=porta,
+
+        debug=True
+
+    )
