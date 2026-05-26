@@ -28,18 +28,14 @@ estoque = [
 def inicio():
 
     return render_template(
-
         "index.html",
-
         estoque=estoque
-
     )
 
 @app.route("/teste")
 def teste():
 
-    return "Flask funcionando no Vercel!"
+    return "Flask funcionando!"
 
-if __name__ == "__main__":
-
-    app.run(debug=True)
+# IMPORTANTE PARA O VERCEL
+app = app
