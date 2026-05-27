@@ -1,8 +1,9 @@
 {
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "api/app.py"
-    }
+    { "source": "/portfolio", "destination": "/projects" },
+    { "source": "/api/:path*", "destination": "https://api.meuservidor.com/:path*" }
+  ],
+  "redirects": [
+    { "source": "/antiga-pagina", "destination": "/nova-pagina", "permanent": true }
   ]
 }
